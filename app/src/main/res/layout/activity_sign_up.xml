@@ -77,8 +77,6 @@ tools:context=".SignUp">
                 android:maxLines="1" />
 
 
-
-
         <Button
             android:id="@+id/btn_signUp"
             style="?android:textAppearanceSmall"
