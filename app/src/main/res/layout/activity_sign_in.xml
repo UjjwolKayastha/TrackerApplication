@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:gravity="center"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    tools:context=".SignUp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOGIN HERE"
+            android:textSize="40dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
+            />
+
+
+
+
+
+
+        <EditText
+            android:id="@+id/signin_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:maxLines="1" />
+
+
+
+
+
+        <EditText
+            android:id="@+id/signin_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:maxLines="1" />
+
+
+
+        <Button
+            android:id="@+id/btn_signIn"
+            style="?android:textAppearanceSmall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/colorNew"
+            android:text="LOGIN"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>
