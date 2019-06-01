@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +25,7 @@ public class SignUp extends AppCompatActivity {
     EditText name, email, password, cpassword;
     Button signup;
 
+    TextView actlogin;
     //Firebase
     private FirebaseAuth firebaseAuth;
 
@@ -42,6 +44,14 @@ public class SignUp extends AppCompatActivity {
         email = findViewById(R.id.signup_email);
         password = findViewById(R.id.signup_password);
         cpassword = findViewById(R.id.signup_confirmPassword);
+
+        actlogin = findViewById(R.id.actLogin);
+        actlogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), SignIn.class));
+            }
+        });
 
         signup = findViewById(R.id.btn_signUp);
 

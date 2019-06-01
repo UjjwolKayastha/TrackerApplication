@@ -210,6 +210,16 @@ tools:context=".SignUp">
             android:textColor="@android:color/white"
             android:textStyle="bold" />
 
+        <TextView
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/lobster"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/actLogin"
+            android:layout_gravity="center"
+            android:text="Already Have an Account? SIGNIN Here."/>
+
     </LinearLayout>
 
 

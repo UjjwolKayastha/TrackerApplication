@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +22,12 @@ public class SignIn extends AppCompatActivity {
 
     private static final String TAG = SignIn.class.getClass().getSimpleName();
 
-    TextView email, password;
+    EditText email, password;
     Button login;
+
+    TextView actreg;
+
+
 
     private FirebaseAuth firebaseAuth;
 
@@ -36,6 +41,14 @@ public class SignIn extends AppCompatActivity {
 
         email = findViewById(R.id.signin_email);
         password = findViewById(R.id.signin_password);
+
+        actreg = findViewById(R.id.actReg);
+        actreg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), SignUp.class));
+            }
+        });
 
         login = findViewById(R.id.btn_signIn);
 
