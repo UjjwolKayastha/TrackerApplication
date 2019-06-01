@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,14 +33,14 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        //casting firebase
+        //creating firebaseauth instance
         firebaseAuth  = FirebaseAuth.getInstance();
 
 
 
         name = findViewById(R.id.signup_name);
-        email = findViewById(R.id.signin_email);
-        password = findViewById(R.id.signin_password);
+        email = findViewById(R.id.signup_email);
+        password = findViewById(R.id.signup_password);
         cpassword = findViewById(R.id.signup_confirmPassword);
 
         signup = findViewById(R.id.btn_signUp);
@@ -47,16 +48,25 @@ public class SignUp extends AppCompatActivity {
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("val", "onClick: SIGNUP CLICKED");
+                String inemail = email.getText().toString().trim();
+                String inpassword = password.getText().toString().trim();
+
 
                 if(Validate()){
 
-                    firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    firebaseAuth.createUserWithEmailAndPassword(inemail,inpassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
                                 Toast.makeText(SignUp.this, "REGISTRATION SUCCESSFUL", Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(getApplicationContext(), SignIn.class));
 
+                            }else {
+                                // If sign in fails, display a message to the user.
+                                Log.w("val", "createUserWithEmail:failure", task.getException());
+                                Toast.makeText(getApplicationContext(), "REGISTRATION FAILED",
+                                        Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
