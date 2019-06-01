@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "585185361676",
+    "firebase_url": "https://atrackerapp.firebaseio.com",
+    "project_id": "atrackerapp",
+    "storage_bucket": "atrackerapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:585185361676:android:142b9119f80bdda3",
+        "android_client_info": {
+          "package_name": "kayastha.ujjwol.atrackerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "585185361676-008sqkbppjjgsmgqsufi56gc277h2c7d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kayastha.ujjwol.atrackerapp",
+            "certificate_hash": "e504675fc152ab5f58dc605e16700b288ffd0b14"
+          }
+        },
+        {
+          "client_id": "585185361676-3p9drj51joakr5foemjs2ighbhqirumv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSnAs4DOJ5zG1sHmVjnh3kLobVspneYyg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "585185361676-3p9drj51joakr5foemjs2ighbhqirumv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
