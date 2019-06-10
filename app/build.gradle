@@ -36,12 +36,17 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'com.firebaseui:firebase-ui-database:4.3.2'
     implementation 'com.google.firebase:firebase-auth:17.0.0'
+
+    //Realtime Database
     implementation 'com.google.firebase:firebase-database:17.0.0'
 
     implementation 'de.hdodenhof:circleimageview:3.0.0'
 
     //google authentication
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
+
+    //image cropper
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
 
 }
 
