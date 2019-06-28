@@ -19,10 +19,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import kayastha.ujjwol.atrackerapp.utilities.Firebase_method;
+
 public class DashBoard extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     private Button btnShowLocation,btnshowMap;
+
+    Firebase_method firebase_method;
 
 
     private static final  int REQUEST_CODE_PERMISSION =2;
@@ -32,6 +36,8 @@ public class DashBoard extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
+
+        firebase_method = new Firebase_method(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar); //sets toolbar as actionbar
@@ -113,7 +119,7 @@ public class DashBoard extends AppCompatActivity
 
 
         } else if (id == R.id.nav_logout) {
-
+            firebase_method.signOut();
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

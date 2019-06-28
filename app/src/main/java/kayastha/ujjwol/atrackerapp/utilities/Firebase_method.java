@@ -1,6 +1,7 @@
 package kayastha.ujjwol.atrackerapp.utilities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import kayastha.ujjwol.atrackerapp.SignIn;
 import kayastha.ujjwol.atrackerapp.models.UserData;
 
 public class Firebase_method {
@@ -47,6 +49,12 @@ public class Firebase_method {
                         }
                     }
                 });
+    }
+
+    public void signOut(){
+        mAuth.getInstance().signOut();
+        Toast.makeText(mContext, "Logged Out Successfully", Toast.LENGTH_SHORT).show();
+        mContext.startActivity(new Intent(mContext.getApplicationContext(), SignIn.class));
     }
 
     public void create_new_userData(final String name, final String email,final String password,final String gender, final String userID){

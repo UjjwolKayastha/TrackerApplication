@@ -237,7 +237,6 @@ public class SignUp extends AppCompatActivity {
                     Toast.makeText(SignUp.this, "REGISTRATION SUCCESSFUL", Toast.LENGTH_SHORT).show();
                     firebaseAuth.signOut();
 
-
                     finish();
                 }
             }
