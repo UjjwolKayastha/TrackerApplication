@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="16dp"
+    android:background="@drawable/buttondesign"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+
+    <TextView
+        android:id="@+id/tvAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/backdesign"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:text="Search and Add Friend"
+        android:textColor="@android:color/white"
+        android:textSize="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:background="@drawable/ic_action_back"
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:src="@drawable/ic_back"
+            android:text="Cancel"
+            android:textSize="7sp" />
+
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:layout_weight="30"
+            android:background="@drawable/edittext_rounded"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/etsearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:ems="10"
+                android:layout_marginTop="5dp"
+                android:hint="Enter Email"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:inputType="textEmailAddress"
+                android:drawablePadding="5dp"
+                android:drawableLeft="@drawable/ic_action_email"
+                android:maxLines="1"
+                android:background="@android:color/transparent"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+        <ImageButton
+            android:background="@drawable/buttondesign"
+            android:id="@+id/btn_add_friend"
+            android:layout_width="0dp"
+            android:layout_weight="7"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_add_friend" />
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
