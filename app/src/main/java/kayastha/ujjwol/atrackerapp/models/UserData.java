@@ -1,16 +1,26 @@
 package kayastha.ujjwol.atrackerapp.models;
 
 public class UserData {
-    String name, email, password, gender;
+    String id ,name, email, password, gender;
 
     public UserData() {
     }
 
-    public UserData(String name, String email, String password, String gender) {
+    public UserData(String id, String name, String email, String password, String gender) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.gender = gender;
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

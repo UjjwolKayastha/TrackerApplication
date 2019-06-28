@@ -133,7 +133,7 @@ public class SignIn extends AppCompatActivity {
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 
-            Log.d(TAG, googleSignInResult.getStatus().getStatusMessage());
+//            Log.d(TAG, googleSignInResult.getStatus().getStatusMessage());
 
             if (googleSignInResult.isSuccess()) {
                 GoogleSignInAccount account = googleSignInResult.getSignInAccount();

@@ -95,7 +95,6 @@ public class DashBoard extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_friends) {
-
             Intent intent=new Intent(getApplicationContext(), Contact.class);
             startActivity(intent);
         } else if (id == R.id.nav_message) {

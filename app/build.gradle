@@ -39,6 +39,7 @@ dependencies {
 
     //Realtime Database
     implementation 'com.google.firebase:firebase-database:17.0.0'
+    implementation 'com.google.firebase:firebase-storage:17.0.0'
 
     implementation 'de.hdodenhof:circleimageview:3.0.0'
 
@@ -46,7 +47,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
 
     //image cropper
-    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    api 'com.theartofdev.edmodo:android-image-cropper:2.6.0'
 
 }
 
