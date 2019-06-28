@@ -22,7 +22,7 @@ public class Contact extends AppCompatActivity {
         firebase_method.searchEmail("anup@gmail.com", new Firebase_method.ResultCallBack<UserData>() {
             @Override
             public void onResult(UserData data) {
-                if(data ==null){
+                if(data == null){
                     // invalid email
                 }else {
 //                    Log.d("ASDFASDF", "Contant " + data.getEmail());
