@@ -34,14 +34,20 @@ import kayastha.ujjwol.atrackerapp.utilities.SectionPagerAdapter;
 
 public class Contact extends AppCompatActivity {
 
+    private static final String TAG = "Contact";
+
+    FirebaseAuth mAuth;
+    FirebaseDatabase mDatabase;
+    DatabaseReference mReference;
+
     Firebase_method firebase_method;
 
     SectionPagerAdapter sectionPagerAdapter;
     ViewPager mViewPager;
     TabLayout mTablayout;
 
-    private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+
+    String uID;
 
 
     @Override
@@ -50,10 +56,13 @@ public class Contact extends AppCompatActivity {
         setContentView(R.layout.activity_contact);
 
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance();
+        mReference = mDatabase.getReference();
 
         //user
         FirebaseUser mUser = mAuth.getCurrentUser();
-        String uID = mUser.getUid();
+        uID = mUser.getUid();
+        Log.d(TAG, "onCreate: Current User: "+ uID);
 
 //        mDatabase = FirebaseDatabase.getInstance().getReference()
 //                .child("atrackerapp").child(uID);
@@ -116,10 +125,12 @@ public class Contact extends AppCompatActivity {
                             // invalid email
                             Toast.makeText(Contact.this, "User Doesn't Exist", Toast.LENGTH_SHORT).show();
                         }else {
-                            Log.d("ASDFASDF", "Contact " + data.getEmail());
+                            Log.d("ASDFASDF", "Contact " + data.getId());
+                            mReference.child(uID).child("Friends").push().setValue(data.getId());
+                            mReference.child(data.getId()).child("Friends").push().setValue(uID);
+
                             Toast.makeText(getApplicationContext(), "DATA SAVED", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
-
                         }
                     }
                 });
