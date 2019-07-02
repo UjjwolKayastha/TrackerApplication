@@ -18,4 +18,18 @@ public class Friends_tab extends Fragment {
         View root = inflater.inflate(R.layout.fragment_friends, container, false);
         return root;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        /*
+        firebase_method.userFriends(loggedInUserId, new Callback(){
+            public void onResult(UsreData friendata){
+                adapter.addItem(friendData);
+
+            }
+        })
+         */
+    }
 }

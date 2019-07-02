@@ -1,7 +1,10 @@
 package kayastha.ujjwol.atrackerapp.models;
 
+import java.util.List;
+
 public class UserData {
     String id ,name, email, password, gender;
+    List<String> Friends;
 
     public UserData() {
     }
