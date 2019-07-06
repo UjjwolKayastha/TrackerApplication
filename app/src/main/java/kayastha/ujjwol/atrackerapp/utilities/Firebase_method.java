@@ -62,7 +62,7 @@ public class Firebase_method {
 
     public void create_new_userData(final String name, final String email,final String password,final String gender, final String userID){
         UserData userData = new UserData(userID, name, email, password, gender);
-        mReference.child(userID).setValue(userData);
+        mReference.child("Users").child(userID).setValue(userData);
     }
 
     // userid -> friends -> []
@@ -71,7 +71,7 @@ public class Firebase_method {
     public void searchEmail(String email, final ResultCallBack<UserData> callBack){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
-        Query query = reference.orderByChild("email").equalTo(email);
+        Query query = reference.child("Users").orderByChild("email").equalTo(email);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -81,7 +81,6 @@ public class Firebase_method {
                         return;
                     }
                 }
-
                 callBack.onResult(null);
             }
 
@@ -97,41 +96,38 @@ public class Firebase_method {
         void onResult(T data);
     }
 
-    private void fetchUserFromUserId(String userId, final ResultCallBack<UserData> callBack){
+//    private void fetchUserFromUserId(String userId, final ResultCallBack<UserData> callBack){
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+//
+//        Query query = reference.orderByChild("id").equalTo(userId);
+//        query.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot.exists()) {
+//                    for (DataSnapshot user : dataSnapshot.getChildren()) {
+//                        callBack.onResult(user.getValue(UserData.class));
+//                        return;
+//                    }
+//                }
+//
+//                callBack.onResult(null);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
+
+    public void userFriends(String id, final ResultCallBack<UserData> callBack){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
 
-        Query query = reference.orderByChild("id").equalTo(userId);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot user : dataSnapshot.getChildren()) {
-                        callBack.onResult(user.getValue(UserData.class));
-
-                        return;
-                    }
-                }
-
-                callBack.onResult(null);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    public void userFriends(String uID, final ResultCallBack<UserData> callBack){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-
-        reference.child(uID).child("Friends").addChildEventListener(new ChildEventListener() {
+        reference.child("Friends").child(id).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                for (DataSnapshot friendData: dataSnapshot.getChildren()){
-                    String friendId=friendData.toString();// TODO assign value
-                    fetchUserFromUserId(friendId, callBack);
-                }
+                String friendEmail=dataSnapshot.getValue(String.class);
+                searchEmail(friendEmail, callBack);
             }
 
             @Override

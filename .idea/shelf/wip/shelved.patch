@@ -1,0 +1,137 @@
+Index: app/src/main/java/kayastha/ujjwol/atrackerapp/Contact.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package kayastha.ujjwol.atrackerapp;\n\nimport android.content.Context;\nimport android.content.Intent;\nimport android.os.Bundle;\nimport android.support.design.widget.FloatingActionButton;\nimport android.support.design.widget.Snackbar;\nimport android.support.design.widget.TabLayout;\nimport android.support.v4.view.ViewPager;\nimport android.support.v7.app.AlertDialog;\nimport android.support.v7.app.AppCompatActivity;\nimport android.text.TextUtils;\nimport android.util.Log;\nimport android.view.LayoutInflater;\nimport android.view.SearchEvent;\nimport android.view.View;\nimport android.widget.Button;\nimport android.widget.EditText;\nimport android.widget.ImageButton;\nimport android.widget.Toast;\n\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.google.firebase.auth.FirebaseUser;\nimport com.google.firebase.database.DatabaseReference;\nimport com.google.firebase.database.FirebaseDatabase;\n\nimport java.text.DateFormat;\nimport java.util.Date;\n\nimport kayastha.ujjwol.atrackerapp.models.UserData;\nimport kayastha.ujjwol.atrackerapp.utilities.Firebase_method;\nimport kayastha.ujjwol.atrackerapp.utilities.SectionPagerAdapter;\n\n\npublic class Contact extends AppCompatActivity {\n\n    private static final String TAG = \"Contact\";\n\n    FirebaseAuth mAuth;\n    FirebaseDatabase mDatabase;\n    DatabaseReference mReference;\n\n    Firebase_method firebase_method;\n\n    SectionPagerAdapter sectionPagerAdapter;\n    ViewPager mViewPager;\n    TabLayout mTablayout;\n\n\n    String uID;\n\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_contact);\n\n        mAuth = FirebaseAuth.getInstance();\n        mDatabase = FirebaseDatabase.getInstance();\n        mReference = mDatabase.getReference();\n\n        //user\n        FirebaseUser mUser = mAuth.getCurrentUser();\n        uID = mUser.getUid();\n        Log.d(TAG, \"onCreate: Current User: \"+ uID);\n\n//        mDatabase = FirebaseDatabase.getInstance().getReference()\n//                .child(\"atrackerapp\").child(uID);\n\n        mViewPager = findViewById(R.id.view_pager);\n        mTablayout= findViewById(R.id.tabs);\n\n        sectionPagerAdapter = new SectionPagerAdapter(getSupportFragmentManager());\n        mViewPager.setAdapter(sectionPagerAdapter);\n        mTablayout.setupWithViewPager(mViewPager);\n\n        firebase_method = new Firebase_method(this);\n\n        FloatingActionButton fab = findViewById(R.id.fab);\n\n        fab.setOnClickListener(new View.OnClickListener() {\n            @Override\n            public void onClick(View view) {\n//                startActivity(new Intent(Contact.this, Search_activity.class));\n//                Snackbar.make(view, \"SEArCH FRIENDS\", Snackbar.LENGTH_LONG)\n//                        .setAction(\"Action\", null).show();\n                addData();\n            }\n        });\n\n\n    }\n\n    private void addData(){\n\n        AlertDialog.Builder myDialog = new AlertDialog.Builder(this);\n        LayoutInflater inflater = LayoutInflater.from(this);\n\n        View myView = inflater.inflate(R.layout.activity_search_activity, null);\n\n        myDialog.setView(myView);\n\n        final AlertDialog dialog = myDialog.create();\n\n        dialog.setCancelable(false);\n\n        final EditText email = myView.findViewById(R.id.etsearch);\n        ImageButton save = myView.findViewById(R.id.btn_add_friend);\n        ImageButton cancel = myView.findViewById(R.id.btn_cancel);\n\n        save.setOnClickListener(new View.OnClickListener() {\n            @Override\n            public void onClick(View v) {\n                String mName = email.getText().toString().trim();\n\n                if (TextUtils.isEmpty(mName)){\n                    email.setError(\"Required Field\");\n                    return;\n                }\n\n                firebase_method.searchEmail(mName, new Firebase_method.ResultCallBack<UserData>() {\n                    @Override\n                    public void onResult(UserData data) {\n                        if(data == null){\n                            // invalid email\n                            Toast.makeText(Contact.this, \"User Doesn't Exist\", Toast.LENGTH_SHORT).show();\n                        }else {\n                            Log.d(\"ASDFASDF\", \"Contact \" + data.getId());\n                            mReference.child(uID).child(\"Friends\").push().setValue(data.getId());\n                            mReference.child(data.getId()).child(\"Friends\").push().setValue(uID);\n\n                            Toast.makeText(getApplicationContext(), \"DATA SAVED\", Toast.LENGTH_SHORT).show();\n                            dialog.dismiss();\n                        }\n                    }\n                });\n\n\n            }\n        });\n\n        cancel.setOnClickListener(new View.OnClickListener() {\n            @Override\n            public void onClick(View v) {\n                dialog.dismiss();\n            }\n        });\n\n        dialog.show();\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/kayastha/ujjwol/atrackerapp/Contact.java	(date 1562403047000)
++++ app/src/main/java/kayastha/ujjwol/atrackerapp/Contact.java	(date 1562428241000)
+@@ -126,7 +126,7 @@
+                             Toast.makeText(Contact.this, "User Doesn't Exist", Toast.LENGTH_SHORT).show();
+                         }else {
+                             Log.d("ASDFASDF", "Contact " + data.getId());
+-                            mReference.child(uID).child("Friends").push().setValue(data.getId());
++                            mReference.child(uID).child("Friends").push().setValue(data.getEmail());
+                             mReference.child(data.getId()).child("Friends").push().setValue(uID);
+ 
+                             Toast.makeText(getApplicationContext(), "DATA SAVED", Toast.LENGTH_SHORT).show();
+Index: app/src/main/java/kayastha/ujjwol/atrackerapp/friends/Friends_tab.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package kayastha.ujjwol.atrackerapp.friends;\n\nimport android.os.Bundle;\nimport android.support.annotation.NonNull;\nimport android.support.annotation.Nullable;\nimport android.support.v4.app.Fragment;\nimport android.support.v7.widget.LinearLayoutManager;\nimport android.support.v7.widget.RecyclerView;\nimport android.util.Log;\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\nimport android.widget.TextView;\nimport android.widget.Toast;\n\nimport com.firebase.ui.database.FirebaseRecyclerAdapter;\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.google.firebase.auth.FirebaseUser;\nimport com.google.firebase.database.DatabaseReference;\nimport com.google.firebase.database.FirebaseDatabase;\n\nimport java.util.List;\n\nimport kayastha.ujjwol.atrackerapp.R;\nimport kayastha.ujjwol.atrackerapp.models.UserData;\nimport kayastha.ujjwol.atrackerapp.utilities.Firebase_method;\n\nimport static android.support.constraint.Constraints.TAG;\n\npublic class Friends_tab extends Fragment {\n    private RecyclerView recyclerView;\n\n    private String name;\n    private String description;\n    String uID;\n    Firebase_method firebase_method;\n\n    private FirebaseAuth mAuth;\n    private DatabaseReference mDatabase;\n\n    @Nullable\n    @Override\n    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {\n        View root = inflater.inflate(R.layout.fragment_friends, container, false);\n\n        mAuth = FirebaseAuth.getInstance();\n\n        firebase_method = new Firebase_method(getActivity());\n\n\n        //user\n        FirebaseUser mUser = mAuth.getCurrentUser();\n        uID = mUser.getUid();\n\n        mDatabase = FirebaseDatabase.getInstance().getReference()\n                .child(\"All Data\").child(uID);\n\n        recyclerView = root.findViewById(R.id.recycler_friends);\n        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());\n        linearLayoutManager.setReverseLayout(true);\n        linearLayoutManager.setStackFromEnd(true);\n        recyclerView.setHasFixedSize(true);\n        recyclerView.setLayoutManager(linearLayoutManager);\n\n        return root;\n\n\n    }\n\n    @Override\n    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {\n        super.onViewCreated(view, savedInstanceState);\n\n\n        firebase_method.userFriends(uID, new Firebase_method.ResultCallBack<UserData>(){\n            @Override\n            public void onResult(UserData data) {\n\n                List<String> friends = null;\n                friends.add(data.toString());\n                Log.d(\"fff\", \"onResult: \" + friends);\n                Toast.makeText(getActivity(), \"FRIENDS\"+ friends, Toast.LENGTH_SHORT).show();\n            }\n//            public void onResult(UserData friendata){\n//                adapter.addItem(friendData);\n//\n//            }\n        });\n\n    }\n\n    //retrieve data from database\n//    @Override\n//    public void onStart() {\n//        super.onStart();\n//\n//        FirebaseRecyclerAdapter<UserData, MyViewHolder> adapter=new FirebaseRecyclerAdapter<UserData, MyViewHolder>(\n//                UserData.class,\n//                R.layout.friend_list_design,\n//                MyViewHolder.class,\n//                mDatabase\n//        ) {\n//\n//            protected void populateViewHolder(MyViewHolder viewHolder, final UserData model, final int position) {\n//\n//                viewHolder.setDate(model.getDate());\n//                viewHolder.setName(model.getName());\n//                viewHolder.setDescription(model.getDescription());\n//\n//                viewHolder.view.setOnClickListener(new View.OnClickListener() {\n//                    @Override\n//                    public void onClick(View v) {\n//\n//                        post_key = getRef(position).getKey();\n//                        name = model.getName();\n//                        description = model.getDescription();\n//\n////                        updateData();\n//                    }\n//                });\n//            }\n//        };\n//        recyclerView.setAdapter(adapter);\n//\n//    }\n\n    //new class for recycler view\n    public static class MyViewHolder extends RecyclerView.ViewHolder{\n\n        View view;\n\n        public MyViewHolder(@NonNull View itemView) {\n            super(itemView);\n            view = itemView;\n        }\n\n        public void setName(String name){\n            TextView mName = view.findViewById(R.id.nameItem);\n            mName.setText(name);\n        }\n\n        public void setDescription(String description){\n            TextView mDescription = view.findViewById(R.id.descItem);\n            mDescription.setText(description);\n        }\n\n        public void setDate(String date){\n            TextView mDate = view.findViewById(R.id.date);\n            mDate.setText(date);\n        }\n    }\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/kayastha/ujjwol/atrackerapp/friends/Friends_tab.java	(date 1562403047000)
++++ app/src/main/java/kayastha/ujjwol/atrackerapp/friends/Friends_tab.java	(date 1562429883000)
+@@ -31,7 +31,7 @@
+     private RecyclerView recyclerView;
+ 
+     private String name;
+-    private String description;
++//    private String email;
+     String uID;
+     Firebase_method firebase_method;
+ 
+@@ -63,8 +63,6 @@
+         recyclerView.setLayoutManager(linearLayoutManager);
+ 
+         return root;
+-
+-
+     }
+ 
+     @Override
+@@ -78,6 +76,7 @@
+ 
+                 List<String> friends = null;
+                 friends.add(data.toString());
++
+                 Log.d("fff", "onResult: " + friends);
+                 Toast.makeText(getActivity(), "FRIENDS"+ friends, Toast.LENGTH_SHORT).show();
+             }
+Index: app/src/main/java/kayastha/ujjwol/atrackerapp/utilities/Firebase_method.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package kayastha.ujjwol.atrackerapp.utilities;\n\nimport android.content.Context;\nimport android.content.Intent;\nimport android.provider.ContactsContract;\nimport android.support.annotation.NonNull;\nimport android.support.annotation.Nullable;\nimport android.util.Log;\nimport android.widget.Toast;\n\nimport com.google.android.gms.tasks.OnCompleteListener;\nimport com.google.android.gms.tasks.Task;\nimport com.google.firebase.auth.AuthResult;\nimport com.google.firebase.auth.FirebaseAuth;\nimport com.google.firebase.database.ChildEventListener;\nimport com.google.firebase.database.DataSnapshot;\nimport com.google.firebase.database.DatabaseError;\nimport com.google.firebase.database.DatabaseReference;\nimport com.google.firebase.database.FirebaseDatabase;\nimport com.google.firebase.database.Query;\nimport com.google.firebase.database.ValueEventListener;\n\nimport kayastha.ujjwol.atrackerapp.SignIn;\nimport kayastha.ujjwol.atrackerapp.models.UserData;\n\npublic class Firebase_method {\n    FirebaseAuth mAuth;\n    FirebaseDatabase mDatabase; \n    DatabaseReference mReference;\n    Context mContext;\n\n    String userID;\n\n\n    public Firebase_method(Context context){\n        mAuth = FirebaseAuth.getInstance();\n        mDatabase = FirebaseDatabase.getInstance();\n        mReference = mDatabase.getReference();\n        mContext = context;\n    }\n\n    public void register_new_email(final String name, final String email,final String password,final String gender){\n        mAuth.createUserWithEmailAndPassword(email, password)\n                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {\n                    @Override\n                    public void onComplete(@NonNull Task<AuthResult> task) {\n                        Log.d(\"val\", \"onComplete: TAsk: \"+ task.getResult().getUser().getUid());\n                        if(!task.isSuccessful()){\n                            Toast.makeText(mContext, \"REGISTRATION FAILED\", Toast.LENGTH_SHORT).show();\n                        }else {\n\n                        }\n                    }\n                });\n    }\n\n    public void signOut(){\n        mAuth.getInstance().signOut();\n        Toast.makeText(mContext, \"Logged Out Successfully\", Toast.LENGTH_SHORT).show();\n        mContext.startActivity(new Intent(mContext.getApplicationContext(), SignIn.class));\n    }\n\n    public void create_new_userData(final String name, final String email,final String password,final String gender, final String userID){\n        UserData userData = new UserData(userID, name, email, password, gender);\n        mReference.child(userID).setValue(userData);\n    }\n\n    // userid -> friends -> []\n    // mReference.child(userID).child(\"friends\").addValue(friendId)\n\n    public void searchEmail(String email, final ResultCallBack<UserData> callBack){\n        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();\n\n        Query query = reference.orderByChild(\"email\").equalTo(email);\n        query.addListenerForSingleValueEvent(new ValueEventListener() {\n            @Override\n            public void onDataChange(DataSnapshot dataSnapshot) {\n                if (dataSnapshot.exists()) {\n                    for (DataSnapshot user : dataSnapshot.getChildren()) {\n                        callBack.onResult(user.getValue(UserData.class));\n                        return;\n                    }\n                }\n\n                callBack.onResult(null);\n            }\n\n            @Override\n            public void onCancelled(DatabaseError databaseError) {\n\n            }\n        });\n    }\n\n\n    public interface ResultCallBack<T>{\n        void onResult(T data);\n    }\n\n    private void fetchUserFromUserId(String userId, final ResultCallBack<UserData> callBack){\n        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();\n\n        Query query = reference.orderByChild(\"id\").equalTo(userId);\n        query.addListenerForSingleValueEvent(new ValueEventListener() {\n            @Override\n            public void onDataChange(DataSnapshot dataSnapshot) {\n                if (dataSnapshot.exists()) {\n                    for (DataSnapshot user : dataSnapshot.getChildren()) {\n                        callBack.onResult(user.getValue(UserData.class));\n\n                        return;\n                    }\n                }\n\n                callBack.onResult(null);\n            }\n\n            @Override\n            public void onCancelled(DatabaseError databaseError) {\n\n            }\n        });\n    }\n\n    public void userFriends(String uID, final ResultCallBack<UserData> callBack){\n        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();\n\n        reference.child(uID).child(\"Friends\").addChildEventListener(new ChildEventListener() {\n            @Override\n            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {\n                for (DataSnapshot friendData: dataSnapshot.getChildren()){\n                    String friendId=friendData.toString();// TODO assign value\n                    fetchUserFromUserId(friendId, callBack);\n                }\n            }\n\n            @Override\n            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {\n\n            }\n\n            @Override\n            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {\n\n            }\n\n            @Override\n            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {\n\n            }\n\n            @Override\n            public void onCancelled(@NonNull DatabaseError databaseError) {\n\n            }\n        });\n    }\n\n}\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/kayastha/ujjwol/atrackerapp/utilities/Firebase_method.java	(date 1562403047000)
++++ app/src/main/java/kayastha/ujjwol/atrackerapp/utilities/Firebase_method.java	(date 1562428914000)
+@@ -81,7 +81,6 @@
+                         return;
+                     }
+                 }
+-
+                 callBack.onResult(null);
+             }
+ 
+@@ -97,30 +96,29 @@
+         void onResult(T data);
+     }
+ 
+-    private void fetchUserFromUserId(String userId, final ResultCallBack<UserData> callBack){
+-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+-
+-        Query query = reference.orderByChild("id").equalTo(userId);
+-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+-            @Override
+-            public void onDataChange(DataSnapshot dataSnapshot) {
+-                if (dataSnapshot.exists()) {
+-                    for (DataSnapshot user : dataSnapshot.getChildren()) {
+-                        callBack.onResult(user.getValue(UserData.class));
+-
+-                        return;
+-                    }
+-                }
+-
+-                callBack.onResult(null);
+-            }
+-
+-            @Override
+-            public void onCancelled(DatabaseError databaseError) {
+-
+-            }
+-        });
+-    }
++//    private void fetchUserFromUserId(String userId, final ResultCallBack<UserData> callBack){
++//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
++//
++//        Query query = reference.orderByChild("id").equalTo(userId);
++//        query.addValueEventListener(new ValueEventListener() {
++//            @Override
++//            public void onDataChange(DataSnapshot dataSnapshot) {
++//                if (dataSnapshot.exists()) {
++//                    for (DataSnapshot user : dataSnapshot.getChildren()) {
++//                        callBack.onResult(user.getValue(UserData.class));
++//                        return;
++//                    }
++//                }
++//
++//                callBack.onResult(null);
++//            }
++//
++//            @Override
++//            public void onCancelled(DatabaseError databaseError) {
++//
++//            }
++//        });
++//    }
+ 
+     public void userFriends(String uID, final ResultCallBack<UserData> callBack){
+         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+@@ -128,10 +126,8 @@
+         reference.child(uID).child("Friends").addChildEventListener(new ChildEventListener() {
+             @Override
+             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+-                for (DataSnapshot friendData: dataSnapshot.getChildren()){
+-                    String friendId=friendData.toString();// TODO assign value
+-                    fetchUserFromUserId(friendId, callBack);
+-                }
++                String friendEmail=dataSnapshot.getValue(String.class);
++                searchEmail(friendEmail, callBack);
+             }
+ 
+             @Override

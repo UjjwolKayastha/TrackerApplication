@@ -47,7 +47,7 @@ public class Contact extends AppCompatActivity {
     TabLayout mTablayout;
 
 
-    String uID;
+    String uID, uEmail;
 
 
     @Override
@@ -62,6 +62,7 @@ public class Contact extends AppCompatActivity {
         //user
         FirebaseUser mUser = mAuth.getCurrentUser();
         uID = mUser.getUid();
+        uEmail = mUser.getEmail();
         Log.d(TAG, "onCreate: Current User: "+ uID);
 
 //        mDatabase = FirebaseDatabase.getInstance().getReference()
@@ -126,8 +127,8 @@ public class Contact extends AppCompatActivity {
                             Toast.makeText(Contact.this, "User Doesn't Exist", Toast.LENGTH_SHORT).show();
                         }else {
                             Log.d("ASDFASDF", "Contact " + data.getId());
-                            mReference.child(uID).child("Friends").push().setValue(data.getId());
-                            mReference.child(data.getId()).child("Friends").push().setValue(uID);
+                            mReference.child("Friends").child(data.getId()).push().setValue(uEmail);
+                            mReference.child("Friends").child(uID).push().setValue(data.getEmail());
 
                             Toast.makeText(getApplicationContext(), "DATA SAVED", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();

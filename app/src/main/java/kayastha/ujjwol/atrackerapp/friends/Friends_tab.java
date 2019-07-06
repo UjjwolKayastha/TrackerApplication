@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kayastha.ujjwol.atrackerapp.R;
@@ -31,9 +32,11 @@ public class Friends_tab extends Fragment {
     private RecyclerView recyclerView;
 
     private String name;
-    private String description;
-    String uID;
+//    private String email;
+    String uID, uEmail;
     Firebase_method firebase_method;
+    RecyclerViewAdapter mAdapter;
+    List<UserData> mDataList;
 
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -51,9 +54,10 @@ public class Friends_tab extends Fragment {
         //user
         FirebaseUser mUser = mAuth.getCurrentUser();
         uID = mUser.getUid();
+        uEmail = mUser.getEmail();
 
         mDatabase = FirebaseDatabase.getInstance().getReference()
-                .child("All Data").child(uID);
+                .child("Users").child(uID);
 
         recyclerView = root.findViewById(R.id.recycler_friends);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -62,9 +66,11 @@ public class Friends_tab extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        mDataList = new ArrayList<>();
+        mAdapter = new RecyclerViewAdapter(getContext(), mDataList);
+        recyclerView.setAdapter(mAdapter);
+
         return root;
-
-
     }
 
     @Override
@@ -75,16 +81,9 @@ public class Friends_tab extends Fragment {
         firebase_method.userFriends(uID, new Firebase_method.ResultCallBack<UserData>(){
             @Override
             public void onResult(UserData data) {
-
-                List<String> friends = null;
-                friends.add(data.toString());
-                Log.d("fff", "onResult: " + friends);
-                Toast.makeText(getActivity(), "FRIENDS"+ friends, Toast.LENGTH_SHORT).show();
+                mDataList.add(data);
+                mAdapter.notifyItemInserted(mDataList.size()-1);
             }
-//            public void onResult(UserData friendata){
-//                adapter.addItem(friendData);
-//
-//            }
         });
 
     }
@@ -124,30 +123,30 @@ public class Friends_tab extends Fragment {
 //
 //    }
 
-    //new class for recycler view
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
-
-        View view;
-
-        public MyViewHolder(@NonNull View itemView) {
-            super(itemView);
-            view = itemView;
-        }
-
-        public void setName(String name){
-            TextView mName = view.findViewById(R.id.nameItem);
-            mName.setText(name);
-        }
-
-        public void setDescription(String description){
-            TextView mDescription = view.findViewById(R.id.descItem);
-            mDescription.setText(description);
-        }
-
-        public void setDate(String date){
-            TextView mDate = view.findViewById(R.id.date);
-            mDate.setText(date);
-        }
-    }
+//    //new class for recycler view
+//    public static class MyViewHolder extends RecyclerView.ViewHolder{
+//
+//        View view;
+//
+//        public MyViewHolder(@NonNull View itemView) {
+//            super(itemView);
+//            view = itemView;
+//        }
+//
+//        public void setName(String name){
+//            TextView mName = view.findViewById(R.id.nameItem);
+//            mName.setText(name);
+//        }
+//
+//        public void setDescription(String description){
+//            TextView mDescription = view.findViewById(R.id.descItem);
+//            mDescription.setText(description);
+//        }
+//
+//        public void setDate(String date){
+//            TextView mDate = view.findViewById(R.id.date);
+//            mDate.setText(date);
+//        }
+//    }
 
 }
