@@ -107,6 +107,7 @@ public class Firebase_method {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot user : dataSnapshot.getChildren()) {
                         callBack.onResult(user.getValue(UserData.class));
+
                         return;
                     }
                 }
@@ -128,7 +129,7 @@ public class Firebase_method {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 for (DataSnapshot friendData: dataSnapshot.getChildren()){
-                    String friendId="";// TODO assign value
+                    String friendId=friendData.toString();// TODO assign value
                     fetchUserFromUserId(friendId, callBack);
                 }
             }
