@@ -47,8 +47,6 @@ public class Firebase_method {
                         Log.d("val", "onComplete: TAsk: "+ task.getResult().getUser().getUid());
                         if(!task.isSuccessful()){
                             Toast.makeText(mContext, "REGISTRATION FAILED", Toast.LENGTH_SHORT).show();
-                        }else {
-                            mContext.startActivity(new Intent(mContext.getApplicationContext(), SignIn.class));
                         }
                     }
                 });

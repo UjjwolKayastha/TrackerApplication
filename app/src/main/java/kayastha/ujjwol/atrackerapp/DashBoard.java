@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,9 +27,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import kayastha.ujjwol.atrackerapp.maps.GPSTracker;
 import kayastha.ujjwol.atrackerapp.maps.MapsActivity;
+import kayastha.ujjwol.atrackerapp.models.UserData;
 import kayastha.ujjwol.atrackerapp.utilities.Firebase_method;
 
 public class DashBoard extends AppCompatActivity
@@ -38,7 +41,8 @@ public class DashBoard extends AppCompatActivity
     private static final int REQUEST_CODE_PERMISSION = 2;
     String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
     GPSTracker gps;
-    TextView location;
+    TextView location, navEmail, navUsername;
+    ImageButton navImage;
     FirebaseDatabase database;
     DatabaseReference myRef, myRefClient;
 
@@ -48,6 +52,8 @@ public class DashBoard extends AppCompatActivity
     String uID, uEmail;
 
     String value = null;
+
+    String currentUserEmail;
 
 
 
@@ -70,8 +76,9 @@ public class DashBoard extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Chat with Friends", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                startActivity(new Intent(getApplicationContext(), Message.class));
             }
         });
 
@@ -94,16 +101,25 @@ public class DashBoard extends AppCompatActivity
             e.printStackTrace();
         }
 
-        btnShowLocation=findViewById(R.id.button);
+//        navImage =navigationView.getHeaderView(0).findViewById(R.id.navImage);
+        navEmail =navigationView.getHeaderView(0).findViewById(R.id.navEmail);
+        navUsername =navigationView.getHeaderView(0).findViewById(R.id.navUsername);
 
+        currentUserEmail = mAuth.getCurrentUser().getEmail();
+        firebase_method.searchEmail(currentUserEmail, new Firebase_method.ResultCallBack<UserData>() {
+            @Override
+            public void onResult(UserData data) {
+//                Picasso.with(DashBoard.this).load(data.getProfileImage()).into(navImage);
+                navUsername.setText(data.getName());
+                navEmail.setText(data.getEmail());
+            }
+        });
 
             gps = new GPSTracker(DashBoard.this);
-            location = findViewById(R.id.Location);
             if (gps.canGetLocation()) {
                 double latitude = gps.getLatitide();
                 double longitude = gps.getLongitude();
 
-                location.setText(latitude + "" + longitude);
 
 //                  FirebaseApp.initializeApp(MainActivity.this);
                 database = FirebaseDatabase.getInstance();
@@ -117,34 +133,24 @@ public class DashBoard extends AppCompatActivity
 //                    } else {
 //                        Log.d(TAG, "firebase ref is not null");
 //                    }
-
-
-                myRef.child(uID).child("Location").setValue(latitude + "," + longitude);
+                myRef.child(uID).child("location").setValue(latitude + "," + longitude);
             } else {
                 gps.showSettingsAlert();
             }
 
 
-
-
-        btnshowMap=findViewById(R.id.button2);
-
         final FirebaseDatabase databaseClient;
         databaseClient= FirebaseDatabase.getInstance();
         myRefClient = databaseClient.getReference("Users");
-
-        myRefClient.child(uID).child("Location").addValueEventListener(new ValueEventListener() {
+        myRefClient.child(uID).child("location").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 value = dataSnapshot.getValue(String.class);
-                TextView textView = findViewById(R.id.LocationClient);
-                textView.setText(value);
+//                TextView textView = findViewById(R.id.LocationClient);
+//                textView.setText(value);
                 String [] seperator = value.split(",");
                 String latPos = seperator[0].trim();
                 String longPos = seperator[1].trim();
-
-                double dLat = Double.parseDouble(latPos);
-                double dLong = Double.parseDouble(longPos);
             }
 
             @Override
@@ -152,43 +158,6 @@ public class DashBoard extends AppCompatActivity
 
             }
         });
-
-
-
-//        btnshowMap.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                final FirebaseDatabase databaseClient;
-//                databaseClient= FirebaseDatabase.getInstance();
-//                myRefClient = databaseClient.getReference("Users");
-//
-//                myRefClient.child(uID).child("Location").addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        value = dataSnapshot.getValue(String.class);
-//                        TextView textView = findViewById(R.id.LocationClient);
-//                        textView.setText(value);
-//                        String [] seperator = value.split(",");
-//                        String latPos = seperator[0].trim();
-//                        String longPos = seperator[1].trim();
-//
-//                        double dLat = Double.parseDouble(latPos);
-//                        double dLong = Double.parseDouble(longPos);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//
-////                Intent intent=new Intent(getApplicationContext(), MapsActivity.class);
-////                intent.putExtra("LocationValue", value);
-////                startActivity(intent);
-//
-//            }
-//        });
-//
     }
 
     public void Map(View view){
@@ -219,6 +188,7 @@ public class DashBoard extends AppCompatActivity
         if (id == R.id.nav_friends) {
             Intent intent=new Intent(getApplicationContext(), Contact.class);
             startActivity(intent);
+
         } else if (id == R.id.nav_message) {
             Intent intent=new Intent(getApplicationContext(), Message.class);
             startActivity(intent);
@@ -226,7 +196,6 @@ public class DashBoard extends AppCompatActivity
         } else if (id == R.id.nav_alarm) {
 //            Intent intent=new Intent(getApplicationContext(), Alarm.class);
 //            startActivity(intent);
-
 
         } else if (id == R.id.nav_shareLocation) {
 

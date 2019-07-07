@@ -1,9 +1,11 @@
 package kayastha.ujjwol.atrackerapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -36,12 +38,18 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import kayastha.ujjwol.atrackerapp.models.UserData;
+import kayastha.ujjwol.atrackerapp.utilities.Firebase_method;
+
 public class Profile extends AppCompatActivity {
 
     ImageView profile_image;
-    TextView tv_name;
+    TextView tv_name, tv_email;
     private static final int Gallery_Pick = 1;
 
+    Button deleteProfile;
+
+    Firebase_method firebase_method;
 
     FirebaseAuth firebaseAuth;
     DatabaseReference mReference;
@@ -49,27 +57,77 @@ public class Profile extends AppCompatActivity {
     private StorageReference userprofileImagereference;
 
 
-    String currentUserId, currentUserName, currentUserEmail;
+    String currentUserId, currentUserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        firebaseAuth  = FirebaseAuth.getInstance();
+        firebase_method = new Firebase_method(this);
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference();
 
         currentUserId = firebaseAuth.getCurrentUser().getUid();
         currentUserEmail = firebaseAuth.getCurrentUser().getEmail();
-        currentUserName = String.valueOf(mDatabase.getReference("Users").child(currentUserId).child("name"));
 
         userprofileImagereference = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
-
-
         profile_image = findViewById(R.id.imageView);
+        tv_name = findViewById(R.id.textView);
+        tv_email = findViewById(R.id.textView2);
+
+        deleteProfile = findViewById(R.id.btndelete);
+        deleteProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(Profile.this);
+                dialog.setTitle("Are you sure you want to delete your Account??");
+                dialog.setTitle("Once deleted your account cannot be recovered and you no longer can access the app.");
+
+                dialog.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                        user.delete()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            mReference.child("Users").child(currentUserId).removeValue();
+                                            Toast.makeText(Profile.this, "Account Deleted Successfully!! :(", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(getApplicationContext(), SignUp.class));
+                                        }
+                                    }
+                                });
+                    }
+                });
+
+                dialog.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = dialog.create();
+                alertDialog.show();
+            }
+        });
+
+        firebase_method.searchEmail(currentUserEmail, new Firebase_method.ResultCallBack<UserData>() {
+            @Override
+            public void onResult(UserData data) {
+                Picasso.with(Profile.this).load(data.getProfileImage()).into(profile_image);
+                tv_name.setText(data.getName());
+            }
+        });
+
+        tv_email.setText(currentUserEmail);
+
         profile_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,43 +138,42 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        tv_name = findViewById(R.id.textView);
-        tv_name.setText(currentUserName);
+
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==Gallery_Pick && resultCode==RESULT_OK && data!=null){
+        if (requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null) {
             Uri ImageUri = data.getData();
 
             CropImage.activity().setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(1,1)
+                    .setAspectRatio(1, 1)
                     .start(this);
         }
-        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
-            if(resultCode == RESULT_OK){
+            if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
 
                 final StorageReference filePath = userprofileImagereference.child(currentUserId + ".jpg");
                 filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Toast.makeText(Profile.this, "Image Stored Successfully", Toast.LENGTH_SHORT).show();
                             UploadTask.TaskSnapshot taskResult = task.getResult();
                             final String downloadUrl = taskResult.toString();
 
 
                             Log.d("upload_link", "onComplete: "
-                                    +  taskResult.getMetadata()
+                                    + taskResult.getMetadata()
                                     .getReference()
                                     .getDownloadUrl()
                                     .toString()
-                                    +" : ");
+                                    + " : ");
 
 
                             filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -126,42 +183,40 @@ public class Profile extends AppCompatActivity {
                                     Log.d("uri", downloadUrl.toString());
                                     //image url
                                     Picasso.with(Profile.this).load(downloadUrl).into(profile_image);
-                                }
-                            });
-
-                            mReference.child("Users").child(currentUserId).child("ProfileImage").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    Log.d("download", "onComplete: "+ downloadUrl);
-                                    if(task.isSuccessful()){
-                                        Toast.makeText(Profile.this, "Image stored in Firebase", Toast.LENGTH_SHORT).show();
-//                                        Picasso.with(Profile.this).load(downloadUrl).into(profile_image);
 
 
-                                    } else {
-                                        String message = task.getException().getMessage();
-                                        Toast.makeText(Profile.this, message, Toast.LENGTH_SHORT).show();
-                                    }
+                                    mReference.child("Users").child(currentUserId).child("profileImage").setValue(downloadUrl.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+//                                            Log.d("download", "onComplete: " + downloadUrl);
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(Profile.this, "Image stored in Firebase", Toast.LENGTH_SHORT).show();
+
+
+                                            } else {
+                                                String message = task.getException().getMessage();
+                                                Toast.makeText(Profile.this, message, Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
                                 }
                             });
 
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d("failure", "FAILURE: "+ e.getLocalizedMessage());
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("failure", "FAILURE: " + e.getLocalizedMessage());
 
-                            }
-                        });  //saves cropped image in firebasestorage
+                    }
+                });  //saves cropped image in firebasestorage
             } else {
                 Toast.makeText(this, "Image cannot be cropped", Toast.LENGTH_SHORT).show();
             }
         }
 
     }
-
-
 
 
 }
