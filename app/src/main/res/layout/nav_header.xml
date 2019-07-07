@@ -8,12 +8,14 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageButton
+        android:id="@+id/navImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_profile"
         />
 
     <TextView
+        android:id="@+id/navUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
@@ -22,6 +24,7 @@
         android:textColor="@android:color/white"
         />
     <TextView
+        android:id="@+id/navEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"

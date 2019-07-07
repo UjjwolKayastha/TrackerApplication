@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.maps.model.Dash;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -235,7 +236,7 @@ public class SignUp extends AppCompatActivity {
 
     private void setupFirebaseAuthentication(){
         firebaseAuth  = FirebaseAuth.getInstance();
-
+        firebaseAuth.signOut();
         valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -265,9 +266,9 @@ public class SignUp extends AppCompatActivity {
 
 //                    firebase_method.send_new_user_data(strName, strEmail, strPassword, strGender);
                     Toast.makeText(SignUp.this, "REGISTRATION SUCCESSFUL", Toast.LENGTH_SHORT).show();
-                    firebaseAuth.signOut();
 
                     finish();
+                    startActivity(new Intent(getApplicationContext(), DashBoard.class));
                 }
             }
         };

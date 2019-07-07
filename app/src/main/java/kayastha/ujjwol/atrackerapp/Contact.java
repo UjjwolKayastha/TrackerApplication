@@ -130,7 +130,7 @@ public class Contact extends AppCompatActivity {
                             mReference.child("Friends").child(data.getId()).push().setValue(uEmail);
                             mReference.child("Friends").child(uID).push().setValue(data.getEmail());
 
-                            Toast.makeText(getApplicationContext(), "DATA SAVED", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Friend Added", Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
                     }

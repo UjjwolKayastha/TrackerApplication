@@ -11,8 +11,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import kayastha.ujjwol.atrackerapp.R;
+import kayastha.ujjwol.atrackerapp.models.UserData;
+import kayastha.ujjwol.atrackerapp.utilities.Firebase_method;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -20,10 +24,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     String str;
     double dLat, dLong;
 
+    String uID;
+    Firebase_method firebase_method;
+    private FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        mAuth = FirebaseAuth.getInstance();
+        firebase_method = new Firebase_method(this);
+
+
+        FirebaseUser mUser = mAuth.getCurrentUser();
+        uID = mUser.getUid();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -53,14 +69,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(dLat, dLong);
 
-        MarkerOptions marker = new MarkerOptions().position(sydney).title("Location");
+        firebase_method.userFriends(uID, new Firebase_method.ResultCallBack<UserData>(){
+            @Override
+            public void onResult(UserData data) {
+                plotInMap(data);
+            }
+        });
+
+    }
+
+    private void plotInMap(UserData data){
+
+        String[] arr = data.getLocation().split(",");
+        double lat = Double.parseDouble(arr[0]);
+        double lng = Double.parseDouble(arr[1].trim());
+
+        // Add a marker in Sydney and move the camera
+        LatLng sydney = new LatLng(lat, lng);
+
+        MarkerOptions marker = new MarkerOptions().position(sydney).title(data.getName());
         marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.userplaceholder));
         mMap.addMarker(marker);
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(2f));
     }
 }

@@ -4,7 +4,26 @@ import java.util.List;
 
 public class UserData {
     String id ,name, email, password, gender;
-    List<String> Friends;
+    String location;
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    String profileImage;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+//    List<String> Friends;
 
     public UserData() {
     }
