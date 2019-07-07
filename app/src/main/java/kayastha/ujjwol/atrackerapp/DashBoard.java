@@ -95,6 +95,38 @@ public class DashBoard extends AppCompatActivity
         }
 
         btnShowLocation=findViewById(R.id.button);
+
+
+            gps = new GPSTracker(DashBoard.this);
+            location = findViewById(R.id.Location);
+            if (gps.canGetLocation()) {
+                double latitude = gps.getLatitide();
+                double longitude = gps.getLongitude();
+
+                location.setText(latitude + "" + longitude);
+
+//                  FirebaseApp.initializeApp(MainActivity.this);
+                database = FirebaseDatabase.getInstance();
+
+                myRef = database.getReference("Users");
+                //                myRef = database.getReference();
+
+
+//                    if (myRef == null) {
+//                        Log.d(TAG, "firebase ref is null");
+//                    } else {
+//                        Log.d(TAG, "firebase ref is not null");
+//                    }
+
+
+                myRef.child(uID).child("Location").setValue(latitude + "," + longitude);
+            } else {
+                gps.showSettingsAlert();
+            }
+
+
+
+
         btnshowMap=findViewById(R.id.button2);
 
         final FirebaseDatabase databaseClient;
@@ -122,37 +154,6 @@ public class DashBoard extends AppCompatActivity
         });
 
 
-        btnShowLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gps = new GPSTracker(DashBoard.this);
-                location = findViewById(R.id.Location);
-                if (gps.canGetLocation()) {
-                    double latitude = gps.getLatitide();
-                    double longitude = gps.getLongitude();
-
-                    location.setText(latitude + "" + longitude);
-
-//                  FirebaseApp.initializeApp(MainActivity.this);
-                    database = FirebaseDatabase.getInstance();
-
-                    myRef = database.getReference("Users");
-                    //                myRef = database.getReference();
-
-
-//                    if (myRef == null) {
-//                        Log.d(TAG, "firebase ref is null");
-//                    } else {
-//                        Log.d(TAG, "firebase ref is not null");
-//                    }
-
-
-                    myRef.child(uID).child("Location").setValue(latitude + "," + longitude);
-                } else {
-                    gps.showSettingsAlert();
-                }
-            }
-        });
 
 //        btnshowMap.setOnClickListener(new View.OnClickListener() {
 //            @Override
