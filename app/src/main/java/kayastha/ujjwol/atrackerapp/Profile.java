@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,7 +48,7 @@ public class Profile extends AppCompatActivity {
     TextView tv_name, tv_email;
     private static final int Gallery_Pick = 1;
 
-    Button deleteProfile;
+    Button updateProfile, deleteProfile;
 
     Firebase_method firebase_method;
 
@@ -86,7 +87,7 @@ public class Profile extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(Profile.this);
                 dialog.setTitle("Are you sure you want to delete your Account??");
-                dialog.setTitle("Once deleted your account cannot be recovered and you no longer can access the app.");
+                dialog.setTitle("Once deleted your account cannot be recovered!!");
 
                 dialog.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
@@ -139,6 +140,13 @@ public class Profile extends AppCompatActivity {
         });
 
 
+        updateProfile = findViewById(R.id.btnUpdateDialog);
+        updateProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showUpdateDialog(currentUserId, currentUserEmail);
+            }
+        });
 
     }
 
@@ -215,6 +223,46 @@ public class Profile extends AppCompatActivity {
                 Toast.makeText(this, "Image cannot be cropped", Toast.LENGTH_SHORT).show();
             }
         }
+
+    }
+
+    private void showUpdateDialog(final String currentUserId, String currentUserEmail){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View view = inflater.inflate(R.layout.update_dialog, null);
+        builder.setView(view);
+
+        firebase_method.searchEmail(currentUserEmail, new Firebase_method.ResultCallBack<UserData>() {
+            @Override
+            public void onResult(UserData data) {
+                String userName = data.getName();
+                final TextView textViewName = view.findViewById(R.id.OldUsernameTextView);
+                textViewName.setText(data.getName());
+            }
+        });
+
+        final Button buttonUPdate = view.findViewById(R.id.updateUsernameButton);
+
+        builder.setTitle("Update Username: " + currentUserEmail);
+
+        final AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        buttonUPdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText editTextName = view.findViewById(R.id.updateUsernameEditText);
+
+                if(TextUtils.isEmpty(editTextName.getText().toString())){
+                    editTextName.setError("Please Enter a Username");
+                }
+
+                mReference.child("Users").child(currentUserId).child("name").setValue(editTextName.getText().toString());
+                Toast.makeText(Profile.this, "Username Updated Successfully", Toast.LENGTH_SHORT).show();
+                alertDialog.dismiss();
+            }
+        });
+
 
     }
 

@@ -64,7 +64,7 @@ public class SignUp extends AppCompatActivity {
     FirebaseAuth.AuthStateListener mAuthListener;
     ValueEventListener valueEventListener;
 
-    private StorageReference userprofileImagereference;
+//    private StorageReference userprofileImagereference;
 
 
 
@@ -80,22 +80,22 @@ public class SignUp extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference();
-        userprofileImagereference = FirebaseStorage.getInstance().getReference().child("Profile Images");
+//        userprofileImagereference = FirebaseStorage.getInstance().getReference().child("Profile Images");
 
         firebase_method = new Firebase_method(this);
 //        currentUserId = firebaseAuth.getCurrentUser().getUid();
 
 
-        profile_image = findViewById(R.id.profile_image);
-        profile_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent galleryIntent = new Intent();
-                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                galleryIntent.setType("image/*");
-                startActivityForResult(galleryIntent, Gallery_Pick);
-            }
-        });
+//        profile_image = findViewById(R.id.profile_image);
+//        profile_image.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent galleryIntent = new Intent();
+//                galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+//                galleryIntent.setType("image/*");
+//                startActivityForResult(galleryIntent, Gallery_Pick);
+//            }
+//        });
 
 
         etname = findViewById(R.id.signup_name);
@@ -145,80 +145,80 @@ public class SignUp extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==Gallery_Pick && resultCode==RESULT_OK && data!=null){
-            Uri ImageUri = data.getData();
-
-            CropImage.activity().setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(1,1)
-                    .start(this);
-        }
-        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-
-            if(resultCode == RESULT_OK){
-                Uri resultUri = result.getUri();
-
-                final StorageReference filePath = userprofileImagereference.child(currentUserId + ".jpg");
-                filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(SignUp.this, "Image Stored Successfully", Toast.LENGTH_SHORT).show();
-                            UploadTask.TaskSnapshot taskResult = task.getResult();
-                            final String downloadUrl = taskResult.toString();
-
-
-                           Log.d("upload_link", "onComplete: "
-                                   +  taskResult.getMetadata()
-                                   .getReference()
-                                   .getDownloadUrl()
-                                   .toString()
-                                   +" : ");
-
-
-                            filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    Uri downloadUrl = uri;
-                                    Log.d("uri", downloadUrl.toString());
-                                    //Do what you want with the url
-                                }
-                            });
-
-                            mReference.child("ProfileImage").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    Log.d("download", "onComplete: "+ downloadUrl);
-                                    if(task.isSuccessful()){
-                                        Toast.makeText(SignUp.this, "Image stored in Firebase", Toast.LENGTH_SHORT).show();
-
-
-                                    } else {
-                                        String message = task.getException().getMessage();
-                                        Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("failure", "FAILURE: "+ e.getLocalizedMessage());
-
-                    }
-                });  //saves cropped image in firebasestorage
-            } else {
-                Toast.makeText(this, "Image cannot be cropped", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if(requestCode==Gallery_Pick && resultCode==RESULT_OK && data!=null){
+//            Uri ImageUri = data.getData();
+//
+//            CropImage.activity().setGuidelines(CropImageView.Guidelines.ON)
+//                    .setAspectRatio(1,1)
+//                    .start(this);
+//        }
+//        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+//            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+//
+//            if(resultCode == RESULT_OK){
+//                Uri resultUri = result.getUri();
+//
+//                final StorageReference filePath = userprofileImagereference.child(currentUserId + ".jpg");
+//                filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+//                        if(task.isSuccessful()){
+//                            Toast.makeText(SignUp.this, "Image Stored Successfully", Toast.LENGTH_SHORT).show();
+//                            UploadTask.TaskSnapshot taskResult = task.getResult();
+//                            final String downloadUrl = taskResult.toString();
+//
+//
+//                           Log.d("upload_link", "onComplete: "
+//                                   +  taskResult.getMetadata()
+//                                   .getReference()
+//                                   .getDownloadUrl()
+//                                   .toString()
+//                                   +" : ");
+//
+//
+//                            filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                @Override
+//                                public void onSuccess(Uri uri) {
+//                                    Uri downloadUrl = uri;
+//                                    Log.d("uri", downloadUrl.toString());
+//                                    //Do what you want with the url
+//                                }
+//                            });
+//
+//                            mReference.child("ProfileImage").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//                                    Log.d("download", "onComplete: "+ downloadUrl);
+//                                    if(task.isSuccessful()){
+//                                        Toast.makeText(SignUp.this, "Image stored in Firebase", Toast.LENGTH_SHORT).show();
+//
+//
+//                                    } else {
+//                                        String message = task.getException().getMessage();
+//                                        Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//                            });
+//
+//                        }
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.d("failure", "FAILURE: "+ e.getLocalizedMessage());
+//
+//                    }
+//                });  //saves cropped image in firebasestorage
+//            } else {
+//                Toast.makeText(this, "Image cannot be cropped", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+//
+//    }
 
     private void register_new_user() {
 
