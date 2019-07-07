@@ -1,7 +1,8 @@
-package kayastha.ujjwol.atrackerapp;
+package kayastha.ujjwol.atrackerapp.maps;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -10,9 +11,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import kayastha.ujjwol.atrackerapp.R;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    String str;
+    double dLat, dLong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +27,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        str = getIntent().getExtras().getString("LocationValue");
+        Toast.makeText(this, str, Toast.LENGTH_LONG).show();
+        String [] seperator = str.split(",");
+        String latPos = seperator[0].trim();
+        String longPos = seperator[1].trim();
+
+        dLat = Double.parseDouble(latPos);
+        dLong = Double.parseDouble(longPos);
     }
 
 
@@ -39,8 +53,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        LatLng sydney = new LatLng(dLat, dLong);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Current Location"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
     }
 }
