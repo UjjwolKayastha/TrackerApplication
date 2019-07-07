@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -155,10 +157,10 @@ public class SignUp extends AppCompatActivity {
         if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
 
-            if(requestCode == RESULT_OK){
+            if(resultCode == RESULT_OK){
                 Uri resultUri = result.getUri();
 
-                StorageReference filePath = userprofileImagereference.child(currentUserId + ".jpg");
+                final StorageReference filePath = userprofileImagereference.child(currentUserId + ".jpg");
                 filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -166,11 +168,32 @@ public class SignUp extends AppCompatActivity {
                             Toast.makeText(SignUp.this, "Image Stored Successfully", Toast.LENGTH_SHORT).show();
                             UploadTask.TaskSnapshot taskResult = task.getResult();
                             final String downloadUrl = taskResult.toString();
+
+
+                           Log.d("upload_link", "onComplete: "
+                                   +  taskResult.getMetadata()
+                                   .getReference()
+                                   .getDownloadUrl()
+                                   .toString()
+                                   +" : ");
+
+
+                            filePath.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Uri downloadUrl = uri;
+                                    Log.d("uri", downloadUrl.toString());
+                                    //Do what you want with the url
+                                }
+                            });
+
                             mReference.child("ProfileImage").setValue(downloadUrl).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
+                                    Log.d("download", "onComplete: "+ downloadUrl);
                                     if(task.isSuccessful()){
-                                        Toast.makeText(SignUp.this, "Image stored in FIrebase", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SignUp.this, "Image stored in Firebase", Toast.LENGTH_SHORT).show();
+
 
                                     } else {
                                         String message = task.getException().getMessage();
@@ -180,6 +203,13 @@ public class SignUp extends AppCompatActivity {
                             });
 
                         }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("failure", "FAILURE: "+ e.getLocalizedMessage());
+
                     }
                 });  //saves cropped image in firebasestorage
             } else {
