@@ -1,12 +1,16 @@
-package kayastha.ujjwol.atrackerapp;
+package kayastha.ujjwol.atrackerapp.message;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.Display;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -20,8 +24,11 @@ import com.github.library.bubbleview.BubbleTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import createChannel.CreateChannel;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
+import kayastha.ujjwol.atrackerapp.DashBoard;
+import kayastha.ujjwol.atrackerapp.R;
 import kayastha.ujjwol.atrackerapp.message.ChatMessage;
 
 public class Message extends AppCompatActivity {
@@ -35,6 +42,10 @@ public class Message extends AppCompatActivity {
     EmojIconActions emojIconActions;
 
     ImageButton back;
+
+    private NotificationManagerCompat notificationManagerCompat;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +73,12 @@ public class Message extends AppCompatActivity {
             public void onClick(View view) {
                 FirebaseDatabase.getInstance().getReference().child("Messages").push().setValue(new ChatMessage(emojiconEditText.getText().toString(),
                         FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+
+                DisplayNotification();
+
                 emojiconEditText.setText("");
                 emojiconEditText.requestFocus();
+
             }
         });
         //Check if not sign-in then navigate Signin page
@@ -77,6 +92,22 @@ public class Message extends AppCompatActivity {
             //Load content
             displayChatMessage();
         }
+
+        notificationManagerCompat = NotificationManagerCompat.from(this);
+
+        CreateChannel createChannel = new CreateChannel(this);
+        createChannel.createChannel();
+
+    }
+
+    private void DisplayNotification() {
+        Notification notification = new NotificationCompat.Builder(this, CreateChannel.CHANNEL_1)
+                .setSmallIcon(R.drawable.message)
+                .setContentTitle("New Message")
+                .setContentText(emojiconEditText.getText().toString())
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+        notificationManagerCompat.notify(1, notification);
     }
 
     private void displayChatMessage() {

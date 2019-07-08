@@ -25,7 +25,7 @@
         android:appComponentFactory="androidx.core.app.CoreComponentFactory">
 
         <activity android:name=".Profile"/>
-        <activity android:name=".Message" />
+        <activity android:name=".message.Message" />
         <activity android:name=".Contact" />
         <activity android:name=".DashBoard" />
         <activity android:name=".SignIn" />

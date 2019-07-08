@@ -9,7 +9,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp"
-    tools:context=".Message">
+    tools:context=".message.Message">
 
     <ImageButton
         android:background="@drawable/ic_action_back"
