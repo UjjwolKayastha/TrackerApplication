@@ -2,15 +2,13 @@ package kayastha.ujjwol.atrackerapp.message;
 
 import android.app.Notification;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.view.Display;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,21 +22,30 @@ import com.github.library.bubbleview.BubbleTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
-import createChannel.CreateChannel;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 import kayastha.ujjwol.atrackerapp.DashBoard;
 import kayastha.ujjwol.atrackerapp.R;
-import kayastha.ujjwol.atrackerapp.message.ChatMessage;
+import kayastha.ujjwol.atrackerapp.createChannel.CreateChannel;
+
+//import android.util.Log;
+//import android.widget.EditText;
+//import androidx.annotation.Nullable;
+//import com.google.android.gms.common.ConnectionResult;
+//import com.google.android.gms.wearable.MessageApi;
+//import com.google.android.gms.wearable.Node;
+//import com.google.android.gms.wearable.NodeApi;
+//import com.google.android.gms.wearable.Wearable;
 
 public class Message extends AppCompatActivity {
+
     private static int SIGN_IN_REQUEST_CODE = 1;
     private FirebaseListAdapter<ChatMessage> adapter;
     RelativeLayout activity_message;
 
     //Add Emojicon
     EmojiconEditText emojiconEditText;
-    ImageView emojiButton,submitButton;
+    ImageView emojiButton, submitButton;
     EmojIconActions emojIconActions;
 
     ImageButton back;
@@ -46,6 +53,11 @@ public class Message extends AppCompatActivity {
     private NotificationManagerCompat notificationManagerCompat;
 
 
+
+//    GoogleApiClient googleApiClient = null;
+//
+//    public static final String TAG = "MyDataMAP....";
+//    public static final String WEARABLE_DATA_PATH = "/wearable/data/path";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +110,87 @@ public class Message extends AppCompatActivity {
         CreateChannel createChannel = new CreateChannel(this);
         createChannel.createChannel();
 
+//        GoogleApiClient.Builder builder = new GoogleApiClient.Builder(this);
+//        builder.addApi(Wearable.API);
+//        builder.addConnectionCallbacks(this);
+//        builder.addOnConnectionFailedListener(this);
+//        googleApiClient = builder.build();
+
+
     }
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        googleApiClient.connect();
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        if(googleApiClient != null && googleApiClient.isConnected()){
+//            googleApiClient.disconnect();
+//        }
+//        super.onStop();
+//    }
+//
+//    @Override
+//    public void onConnected(@Nullable Bundle bundle) {
+//        sendMessage();
+//    }
+//
+//
+//    public void sendMessage(){
+//        if(googleApiClient.isConnected()){
+//            String message = ((EditText)findViewById(R.id.text)).getText().toString();
+//            if(message == null || message.equalsIgnoreCase("")){
+//                message="HEY THERE DELILAH";
+//            }
+//            new SendMessageToDataLayer(WEARABLE_DATA_PATH, message).start();  //this calls the run method in the class
+//        }else{
+//
+//        }
+//    }
+//
+//    public void sendMessageOnClick(View view){
+//        sendMessage();
+//    }
+//
+//    public class  SendMessageToDataLayer extends Thread {
+//        String path;
+//        String message;
+//
+//        public SendMessageToDataLayer(String path, String message) {
+//            this.path = path;
+//            this.message = message;
+//        }
+//
+//        @Override
+//        public void run() {  //we send message using this method
+//            NodeApi.GetConnectedNodesResult nodesList = Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
+//            for(Node node: nodesList.getNodes()){
+//                MessageApi.SendMessageResult messageResult = Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), path, message.getBytes()).await();
+//                if(messageResult.getStatus().isSuccess()){
+//
+//                    Log.d(TAG, "run: Message sent successfully to "+ node.getDisplayName());
+//                    Log.d(TAG, "run: Message NODE ID"+ node.getId());
+//                    Log.d(TAG, "run: Message sent successfully of SIZE "+ nodesList.getNodes().size());
+//                }else{
+//                    Log.d(TAG, "run: ERROR");
+//                }
+//            }
+//        }
+//    }
+
+
+//    @Override
+//    public void onConnectionSuspended(int i) {
+//
+//    }
+
+//    @Override
+//    public void onConnectionFailed(@androidx.annotation.NonNull ConnectionResult connectionResult) {
+//
+//    }
 
     private void DisplayNotification() {
         Notification notification = new NotificationCompat.Builder(this, CreateChannel.CHANNEL_1)
