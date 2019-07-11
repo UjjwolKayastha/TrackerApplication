@@ -1,6 +1,7 @@
 package kayastha.ujjwol.atrackerapp;
 
 import android.Manifest;
+import android.app.Notification;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -8,6 +9,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -27,10 +30,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
+import createChannel.CreateChannel;
 import kayastha.ujjwol.atrackerapp.maps.GPSTracker;
 import kayastha.ujjwol.atrackerapp.maps.MapsActivity;
+import kayastha.ujjwol.atrackerapp.message.Message;
 import kayastha.ujjwol.atrackerapp.models.UserData;
 import kayastha.ujjwol.atrackerapp.utilities.Firebase_method;
 
@@ -56,6 +60,7 @@ public class DashBoard extends AppCompatActivity
     String currentUserEmail;
 
 
+    private NotificationManagerCompat notificationManagerCompat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +105,11 @@ public class DashBoard extends AppCompatActivity
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        notificationManagerCompat = NotificationManagerCompat.from(this);
+
+        CreateChannel createChannel = new CreateChannel(this);
+        createChannel.createChannel();
 
 //        navImage =navigationView.getHeaderView(0).findViewById(R.id.navImage);
         navEmail =navigationView.getHeaderView(0).findViewById(R.id.navEmail);
@@ -178,6 +188,15 @@ public class DashBoard extends AppCompatActivity
         }
     }
 
+    private void DisplayNotification() {
+        Notification notification = new NotificationCompat.Builder(this, CreateChannel.CHANNEL_1)
+                .setSmallIcon(R.drawable.location)
+                .setContentTitle("Share Location")
+                .setContentText("YOUR LOCATION IS BEING SHARED!!")
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+        notificationManagerCompat.notify(1, notification);
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -193,15 +212,14 @@ public class DashBoard extends AppCompatActivity
             Intent intent=new Intent(getApplicationContext(), Message.class);
             startActivity(intent);
 
-        } else if (id == R.id.nav_alarm) {
-//            Intent intent=new Intent(getApplicationContext(), Alarm.class);
-//            startActivity(intent);
+        } else if (id == R.id.nav_compass) {
+            startActivity(new Intent(getApplicationContext(), Compass.class));
 
         } else if (id == R.id.nav_shareLocation) {
+            DisplayNotification();
 
         } else if (id == R.id.nav_profile) {
             startActivity(new Intent(getApplicationContext(), Profile.class));
-
 
         } else if (id == R.id.nav_logout) {
             firebase_method.signOut();
