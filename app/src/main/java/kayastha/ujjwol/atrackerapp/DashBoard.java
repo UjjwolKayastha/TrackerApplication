@@ -2,8 +2,10 @@ package kayastha.ujjwol.atrackerapp;
 
 import android.Manifest;
 import android.app.Notification;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -61,6 +63,9 @@ public class DashBoard extends AppCompatActivity
 
 
     private NotificationManagerCompat notificationManagerCompat;
+
+    //hardware
+    private Vibrator vibrator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,6 +173,8 @@ public class DashBoard extends AppCompatActivity
 
             }
         });
+
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     public void Map(View view){
@@ -216,6 +223,7 @@ public class DashBoard extends AppCompatActivity
             startActivity(new Intent(getApplicationContext(), Compass.class));
 
         } else if (id == R.id.nav_shareLocation) {
+            vibrator.vibrate(1000);
             DisplayNotification();
 
         } else if (id == R.id.nav_profile) {
