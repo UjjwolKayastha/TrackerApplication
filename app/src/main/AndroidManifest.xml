@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="kayastha.ujjwol.atrackerapp">
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -24,10 +27,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:appComponentFactory">
-        <activity android:name=".Compass" android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".Compass"
+            android:screenOrientation="portrait" />
         <activity android:name=".Profile" />
         <activity android:name=".message.Message" />
-        <activity android:name=".Contact" />
+        <activity android:name=".friends.Contact" />
         <activity android:name=".DashBoard" />
         <activity android:name=".SignIn" />
         <activity android:name=".SignUp" />

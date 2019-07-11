@@ -18,11 +18,11 @@ public class SectionPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int i) {
         switch (i){
             case 0:
-                Request_tab request_tab = new Request_tab();
-                return request_tab;
-            case 1:
                 Friends_tab friends_tab = new Friends_tab();
                 return friends_tab;
+            case 1:
+                Request_tab request_tab = new Request_tab();
+                return request_tab;
             default:
                 return null;
 
@@ -39,9 +39,9 @@ public class SectionPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position){
             case 0:
-                return  "REQUESTS";
-            case 1:
                 return  "FRIENDS";
+            case 1:
+                return  "REQUESTS";
             default:
                 return null;
         }

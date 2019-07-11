@@ -33,7 +33,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import createChannel.CreateChannel;
+import kayastha.ujjwol.atrackerapp.createChannel.CreateChannel;
+import kayastha.ujjwol.atrackerapp.friends.Contact;
 import kayastha.ujjwol.atrackerapp.maps.GPSTracker;
 import kayastha.ujjwol.atrackerapp.maps.MapsActivity;
 import kayastha.ujjwol.atrackerapp.message.Message;

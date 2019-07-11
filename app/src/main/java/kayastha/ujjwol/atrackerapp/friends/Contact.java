@@ -1,10 +1,7 @@
-package kayastha.ujjwol.atrackerapp;
+package kayastha.ujjwol.atrackerapp.friends;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -12,9 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.SearchEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -24,9 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.DateFormat;
-import java.util.Date;
-
+import kayastha.ujjwol.atrackerapp.R;
 import kayastha.ujjwol.atrackerapp.models.UserData;
 import kayastha.ujjwol.atrackerapp.utilities.Firebase_method;
 import kayastha.ujjwol.atrackerapp.utilities.SectionPagerAdapter;
