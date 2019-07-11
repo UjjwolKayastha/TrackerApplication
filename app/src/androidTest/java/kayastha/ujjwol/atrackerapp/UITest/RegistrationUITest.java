@@ -1,28 +1,23 @@
-package kayastha.ujjwol.atrackerapp;
+package kayastha.ujjwol.atrackerapp.UITest;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
-import android.support.test.espresso.assertion.ViewAssertions;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
 
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
+import kayastha.ujjwol.atrackerapp.R;
+import kayastha.ujjwol.atrackerapp.SignUp;
+
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static java.util.EnumSet.allOf;
-
 import static org.hamcrest.CoreMatchers.allOf;
 
 
@@ -47,7 +42,7 @@ public class RegistrationUITest {
 
     @Test
     public void testRegistration() {
-        Espresso.onView(withId(R.id.signup_name))
+        Espresso.onView(ViewMatchers.withId(R.id.signup_name))
                 .perform(ViewActions.typeText(String.valueOf(name)), ViewActions.closeSoftKeyboard());
         Espresso.onView(withId(R.id.signup_email))
                 .perform(ViewActions.typeText(String.valueOf(email)), ViewActions.closeSoftKeyboard());

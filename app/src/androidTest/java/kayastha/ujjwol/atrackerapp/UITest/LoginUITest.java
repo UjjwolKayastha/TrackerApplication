@@ -1,8 +1,9 @@
-package kayastha.ujjwol.atrackerapp;
+package kayastha.ujjwol.atrackerapp.UITest;
 
 import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
 import android.support.test.espresso.intent.Intents;
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -10,6 +11,9 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import kayastha.ujjwol.atrackerapp.R;
+import kayastha.ujjwol.atrackerapp.SignIn;
 
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
@@ -32,7 +36,7 @@ public class LoginUITest {
 
     @Test
     public void testLogin() {
-        Espresso.onView(withId(R.id.signin_email))
+        Espresso.onView(ViewMatchers.withId(R.id.signin_email))
                 .perform(ViewActions.typeText(String.valueOf(email)), ViewActions.closeSoftKeyboard());
         Espresso.onView(withId(R.id.signin_password))
                 .perform(ViewActions.typeText(String.valueOf(password)), ViewActions.closeSoftKeyboard());
